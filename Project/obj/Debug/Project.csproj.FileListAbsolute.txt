@@ -1,0 +1,10 @@
+D:\Egyetem\Collective project\Project\Project\bin\Debug\Project.exe.config
+D:\Egyetem\Collective project\Project\Project\obj\Debug\Project.csprojResolveAssemblyReference.cache
+D:\Egyetem\Collective project\Project\Project\obj\Debug\Project.Form1.resources
+D:\Egyetem\Collective project\Project\Project\obj\Debug\Project.Properties.Resources.resources
+D:\Egyetem\Collective project\Project\Project\obj\Debug\Project.csproj.GenerateResource.Cache
+D:\Egyetem\Collective project\Project\Project\bin\Debug\Project.exe
+D:\Egyetem\Collective project\Project\Project\bin\Debug\Project.pdb
+D:\Egyetem\Collective project\Project\Project\obj\Debug\Project.exe
+D:\Egyetem\Collective project\Project\Project\obj\Debug\Project.pdb
+D:\Egyetem\Collective project\Project\Project\obj\Debug\Project.csproj.ResolveComReference.cache
