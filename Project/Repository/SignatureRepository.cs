@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Project.Domain;
 using System.Data;
 using System.Data.SqlClient;
@@ -61,7 +58,7 @@ namespace Project.Repository
             try
             {
                 conn = new SqlConnection(connectionString);
-                var command = new SqlCommand("insert into Signatures values (" + element.Userid + "," + element.Documentid + ")");
+                var command = new SqlCommand("insert into Signature values (" + element.Userid + "," + element.Documentid + ")", conn);
                 conn.Open();
                 command.ExecuteNonQuery();
                 return element;

@@ -70,7 +70,7 @@ namespace Project.Controllers
             try
             {
                 int id = flowRepository.GetMaxId() + 1;
-                Flow flow = new Flow(id, documents, creator, revisors, step, FLOW_STATUS.IN_PROGRESS, creationDate);
+                Flow flow = new Flow(id, documents, creator, revisors, step, FLOW_STATUS.IN_PROGRESS, creationDate, DateTime.MinValue);
                 flowRepository.add(flow);
                 LogAction(ACTION_TYPE.CREATE_FLOW);
             }

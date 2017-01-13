@@ -107,17 +107,17 @@ namespace Project.Repository
                 else if (element is Manager)
                 {
                     var el = (Manager)element;
-                    command = new SqlCommand("insert into [User] values (" + id + ", '" + el.Username + "','" + el.Password + "','" + el.Email + "'," + el.Unitid + ",1," + el.Boss + ")", conn);
+                    command = new SqlCommand("insert into [User] values (" + id + ", '" + el.Username + "','" + el.Password + "','" + el.Email + "'," + el.Unitid + ",1," + el.Boss.Id + ")", conn);
                 }
                 else if (element is Contributor)
                 {
                     var el = (Contributor)element;
-                    command = new SqlCommand("insert into [User] values (" + id + ", '" + el.Username + "','" + el.Password + "','" + el.Email + "'," + el.Unitid + ",2," + el.Boss + ")", conn);
+                    command = new SqlCommand("insert into [User] values (" + id + ", '" + el.Username + "','" + el.Password + "','" + el.Email + "'," + el.Unitid + ",2," + el.Boss.Id + ")", conn);
                 }
                 else if (element is Reader)
                 {
                     var el = (Reader)element;
-                    command = new SqlCommand("insert into [User] values (" + id + ", '" + el.Username + "','" + el.Password + "','" + el.Email + "'," + el.Unitid + ",3," + el.Boss + ")", conn);
+                    command = new SqlCommand("insert into [User] values (" + id + ", '" + el.Username + "','" + el.Password + "','" + el.Email + "'," + el.Unitid + ",3," + el.Boss.Id + ")", conn);
                 }
                 conn.Open();
                 command.ExecuteNonQuery();

@@ -72,18 +72,11 @@ namespace Project.Repository
                 conn.Open();
                 var reader = command.ExecuteReader();
                 var elements = new List<int>();
-                try
+                while (reader.Read())
                 {
-                    while (reader.Read())
-                    {
-                        elements.Add(int.Parse(reader.GetValue(0).ToString()));
-                    }
-                    return elements;
+                    elements.Add(int.Parse(reader.GetValue(0).ToString()));
                 }
-                catch (Exception)
-                {
-                    return new List<int>();
-                }
+                return elements;
             }
             catch (Exception)
             {
@@ -107,19 +100,12 @@ namespace Project.Repository
                 var command = new SqlCommand("select * from FlowDocument where document=" + id, conn);
                 conn.Open();
                 var reader = command.ExecuteReader();
-                try
+                var elements = new List<int>();
+                while (reader.Read())
                 {
-                    var elements = new List<int>();
-                    while (reader.Read())
-                    {
-                        elements.Add(int.Parse(reader.GetValue(1).ToString()));
-                    }
-                    return elements;
+                    elements.Add(int.Parse(reader.GetValue(1).ToString()));
                 }
-                catch (Exception)
-                {
-                    return new List<int>();
-                }
+                return elements;
             }
             catch (Exception)
             {

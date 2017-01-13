@@ -16,13 +16,13 @@ namespace Project.Repository
             this.connectionString = Properties.Settings.Default.databaseConnectionString;
         }
 
-        public void add(User user, Flow flow)
+        public void add(User user, Flow flow, int step)
         {
             SqlConnection conn = null;
             try
             {
                 conn = new SqlConnection(connectionString);
-                var command = new SqlCommand("insert into UserFlow values (" + user.Id + "," + flow.Id + ")", conn);
+                var command = new SqlCommand("insert into UserFlow values (" + user.Id + "," + flow.Id + "," + step +")", conn);
                 conn.Open();
                 command.ExecuteNonQuery();
             }
@@ -45,7 +45,7 @@ namespace Project.Repository
             try
             {
                 conn = new SqlConnection(connectionString);
-                var command = new SqlCommand("delete from UserFlow where user=" + user.Id + " and flow=" + flow.Id, conn);
+                var command = new SqlCommand("delete from UserFlow where [user]=" + user.Id + " and flow=" + flow.Id, conn);
                 conn.Open();
                 command.ExecuteNonQuery();
             }
@@ -91,6 +91,7 @@ namespace Project.Repository
                                     result.Add(new List<int>());
                                 }
                                 result[i].Add(tuple.Item1);
+                                ++nr;
                             }
                         }
                         if (nr == 0)
@@ -124,7 +125,7 @@ namespace Project.Repository
             try
             {
                 conn = new SqlConnection(connectionString);
-                var command = new SqlCommand("select * from UserFlow where user=" + id, conn);
+                var command = new SqlCommand("select * from UserFlow where [user]=" + id, conn);
                 conn.Open();
                 var reader = command.ExecuteReader();
                 try

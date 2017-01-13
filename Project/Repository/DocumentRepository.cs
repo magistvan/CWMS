@@ -13,7 +13,7 @@ namespace Project.Repository
 
         public DocumentRepository()
         {
-            this.connectionString = Properties.Settings.Default.databaseConnectionString;
+            connectionString = Properties.Settings.Default.databaseConnectionString;
         }
 
         public List<Document> getAll()
@@ -68,14 +68,15 @@ namespace Project.Repository
                             break;
                         }
                     }
-                    if (found)
+                    if (!found)
                     {
                         break;
                     }
                     ++id;
                 }
                 conn = new SqlConnection(connectionString);
-                var command = new SqlCommand("insert into Document values (" + id + "," + (int)element.Status + "," + element.DraftVersion + "," + element.FinalVersion + "," + element.RevisionVersion + "," + element.Author.Id + ",'" + element.CreationDate.ToString() + "','" + element.ModificationDate.ToString() + "','" + element.Abstract_string + "','" + element.Keywords + "','" + element.FileName + "','" + (int)element.DocumentType + "')");
+                string format = Properties.Settings.Default.dateFormat;
+                var command = new SqlCommand("insert into Document values (" + id + "," + (int)element.Status + "," + element.DraftVersion + "," + element.FinalVersion + "," + element.RevisionVersion + "," + element.Author.Id + ",'" + element.CreationDate.ToString(format) + "','" + element.ModificationDate.ToString(format) + "','" + element.Abstract_string + "','" + element.Keywords + "','" + element.FileName + "'," + (int)element.DocumentType + ")", conn);
                 conn.Open();
                 command.ExecuteNonQuery();
                 element.Id = id;
@@ -100,7 +101,8 @@ namespace Project.Repository
             try
             {
                 conn = new SqlConnection(connectionString);
-                var command = new SqlCommand("update Document set status=" + (int)element.Status + ", draftVersion=" + element.DraftVersion + ", finalVersion=" + element.FinalVersion + ", revisionVersion=" + element.RevisionVersion + ", author=" + element.Author.Id + ", creationDate='" + element.CreationDate.ToString() + "', modificationDate='" + element.ModificationDate.ToString() + "', abstract='" + element.Abstract_string + "', keywords='" + element.Keywords + "', fileName='" + element.FileName + "', type='" + element.DocumentType + "' where id=" + element.Id, conn);
+                string format = Properties.Settings.Default.dateFormat;
+                var command = new SqlCommand("update Document set status=" + (int)element.Status + ", draftVersion=" + element.DraftVersion + ", finalVersion=" + element.FinalVersion + ", revisionVersion=" + element.RevisionVersion + ", author=" + element.Author.Id + ", creationDate='" + element.CreationDate.ToString(format) + "', modificationDate='" + element.ModificationDate.ToString(format) + "', abstract='" + element.Abstract_string + "', keywords='" + element.Keywords + "', fileName='" + element.FileName + "', type=" + (int)element.DocumentType + " where id=" + element.Id, conn);
                 conn.Open();
                 command.ExecuteNonQuery();
             }

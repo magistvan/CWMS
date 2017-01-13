@@ -33,5 +33,23 @@ namespace Project.Properties {
                 return ((string)(this["databaseConnectionString"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("yyyy-MM-dd HH:MM:ss")]
+        public string dateFormat {
+            get {
+                return ((string)(this["dateFormat"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1900.01.01. 0:00:00")]
+        public string defaultDate {
+            get {
+                return ((string)(this["defaultDate"]));
+            }
+        }
     }
 }

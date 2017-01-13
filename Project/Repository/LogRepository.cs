@@ -67,14 +67,15 @@ namespace Project.Repository
                             break;
                         }
                     }
-                    if (found)
+                    if (!found)
                     {
                         break;
                     }
                     ++id;
                 }
                 conn = new SqlConnection(connectionString);
-                SqlCommand command = new SqlCommand("insert into Log values (" + id + "," + element.User.Id + "," + element.Unit.Id + ",'" + element.Date.ToString() + "'," + (int)element.ActionType + ")", conn);
+                string format = Properties.Settings.Default.dateFormat;
+                SqlCommand command = new SqlCommand("insert into Log values (" + id + "," + element.User.Id + "," + element.Unit.Id + ",'" + element.Date.ToString(format) + "'," + (int)element.ActionType + ")", conn);
                 conn.Open();
                 command.ExecuteNonQuery();
                 element.Id = id;
@@ -99,7 +100,8 @@ namespace Project.Repository
             try
             {
                 conn = new SqlConnection(connectionString);
-                SqlCommand command = new SqlCommand("update Log set user=" + element.User.Id + ", unit=" + element.Unit.Id + ", date='" + element.Date.ToString() + "', actionType=" + (int)element.ActionType + " where id=" + element.Id, conn);
+                string format = Properties.Settings.Default.dateFormat;
+                SqlCommand command = new SqlCommand("update Log set [user]=" + element.User.Id + ", unit=" + element.Unit.Id + ", date='" + element.Date.ToString(format) + "', actionType=" + (int)element.ActionType + " where id=" + element.Id, conn);
                 conn.Open();
                 command.ExecuteNonQuery();
             }

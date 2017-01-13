@@ -7,7 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Project.Domain;
 using Project.Controllers;
+using Project.Repository;
 
 namespace Project
 {

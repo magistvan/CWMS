@@ -28,11 +28,11 @@ namespace Project.Repository
                 var reader = command.ExecuteReader();
                 var elements = new List<Unit>();
                 IRepository<User> userRepository = new UserRepository();
-                //var users = userRepository.getAll();
+                var users = userRepository.getAll();
                 while (reader.Read())
                 {
                     int id = int.Parse(reader.GetValue(0).ToString());
-                    var current_users = new List<User>();// users.Where(user => user.Unitid == id).ToList();
+                    var current_users = users.Where(user => user.Unitid == id).ToList();
                     elements.Add(new Unit(id, reader.GetValue(1).ToString(), current_users));
                 }
                 return elements;

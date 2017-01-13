@@ -35,8 +35,7 @@ namespace Project.Repository
                     var creator = userRepository.getById(int.Parse(reader.GetValue(1).ToString()));
                     var revisors = userFlowRepository.getUserIdsByFlowId(id);
                     var documents = flowDocumentRepository.getDocumentIdsByFlowId(id);
-                    Flow f = new Flow(id, documents, creator, revisors, int.Parse(reader.GetValue(2).ToString()), (FLOW_STATUS)int.Parse(reader.GetValue(3).ToString()), DateTime.Parse(reader.GetValue(4).ToString()));
-                    f.EndDate = DateTime.Parse(reader.GetValue(5).ToString());
+                    Flow f = new Flow(id, documents, creator, revisors, int.Parse(reader.GetValue(2).ToString()), (FLOW_STATUS)int.Parse(reader.GetValue(3).ToString()), DateTime.Parse(reader.GetValue(4).ToString()), DateTime.Parse(reader.GetValue(5).ToString()));
                     elements.Add(f);
                 }
                 return elements;
@@ -72,14 +71,15 @@ namespace Project.Repository
                             break;
                         }
                     }
-                    if (found)
+                    if (!found)
                     {
                         break;
                     }
                     ++id;
                 }
                 conn = new SqlConnection(connectionString);
-                var command = new SqlCommand("insert into Flow values (" + id + "," + element.Creator.Id + "," + element.Step + "," + (int)element.Status + "," + element.CreationDate.ToString() + "," + element.EndDate.ToString() + ")");
+                string format = Properties.Settings.Default.dateFormat;
+                var command = new SqlCommand("insert into Flow values (" + id + "," + element.Creator.Id + "," + element.Step + "," + (int)element.Status + ",'" + element.CreationDate.ToString(format) + "','" + element.EndDate.ToString(format) + "')", conn);
                 conn.Open();
                 command.ExecuteNonQuery();
                 element.Id = id;
@@ -103,8 +103,10 @@ namespace Project.Repository
             SqlConnection conn = null;
             try
             {
+                
                 conn = new SqlConnection(connectionString);
-                var command = new SqlCommand("update Flow set creator=" + element.Creator + ", step=" + element.Step + ", status=" + (int)element.Status + ", creationDate=" + element.CreationDate.ToString() + ", endDate= " + element.EndDate.ToString() + " where id=" + element.Id, conn);
+                string format = Properties.Settings.Default.dateFormat;
+                var command = new SqlCommand("update Flow set creator=" + element.Creator.Id + ", step=" + element.Step + ", status=" + (int)element.Status + ", creationDate='" + element.CreationDate.ToString(format) + "', endDate='" + element.EndDate.ToString(format) + "' where id=" + element.Id, conn);
                 conn.Open();
                 command.ExecuteNonQuery();
             }
@@ -160,8 +162,7 @@ namespace Project.Repository
                 var creator = userRepository.getById(int.Parse(reader.GetValue(1).ToString()));
                 var revisors = userFlowRepository.getUserIdsByFlowId(id);
                 var documents = flowDocumentRepository.getDocumentIdsByFlowId(id);
-                Flow f = new Flow(id, documents, creator, revisors, int.Parse(reader.GetValue(2).ToString()), (FLOW_STATUS)int.Parse(reader.GetValue(3).ToString()), DateTime.Parse(reader.GetValue(4).ToString()));
-                f.EndDate = DateTime.Parse(reader.GetValue(5).ToString());
+                Flow f = new Flow(id, documents, creator, revisors, int.Parse(reader.GetValue(2).ToString()), (FLOW_STATUS)int.Parse(reader.GetValue(3).ToString()), DateTime.Parse(reader.GetValue(4).ToString()), DateTime.Parse(reader.GetValue(5).ToString()));
                 return f;
             }
             catch (Exception)

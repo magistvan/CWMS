@@ -115,9 +115,8 @@ namespace Project.Domain
                 endDate = value;
             }
         }
-
-        //EndDate gets the same value as creationDate. Obviously this will be changed when it becomes relevant
-        public Flow(int id, List<int> documents, User creator, List<List<int>> revisors, int step, FLOW_STATUS status, DateTime creationDate)
+        
+        public Flow(int id, List<int> documents, User creator, List<List<int>> revisors, int step, FLOW_STATUS status, DateTime creationDate, DateTime endDate)
         {
             this.id = id;
             this.documents = documents;
@@ -126,7 +125,7 @@ namespace Project.Domain
             this.step = step;
             this.status = status;
             this.creationDate = creationDate;
-            endDate = creationDate;
+            this.endDate = endDate;
         }
 
         public override bool Equals(object obj)
