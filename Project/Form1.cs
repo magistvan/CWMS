@@ -16,9 +16,6 @@ namespace Project
         public Form1()
         {
             InitializeComponent();
-            var ctrl = new UserController();
-            ctrl.registation(0, "magistvan", "1234", "email1", 0, 0);
-            var user = ctrl.getUserByUsername("magistvan");
         }
     }
 }
