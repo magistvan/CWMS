@@ -11,9 +11,9 @@ namespace Project.Repository
     {
         private String connectionString;
 
-        public LogRepository()
+        public LogRepository(string connectionString)
         {
-            this.connectionString = Properties.Settings.Default.databaseConnectionString;
+            this.connectionString = connectionString;
         }
 
         public List<Log> getAll()
@@ -26,8 +26,8 @@ namespace Project.Repository
                 conn.Open();
                 var reader = command.ExecuteReader();
                 var elements = new List<Log>();
-                var userRepository = new UserRepository();
-                var unitRepository = new UnitRepository();
+                var userRepository = new UserRepository(connectionString);
+                var unitRepository = new UnitRepository(connectionString);
                 while (reader.Read())
                 {
                     var user = userRepository.getById(int.Parse(reader.GetValue(1).ToString()));
@@ -150,8 +150,8 @@ namespace Project.Repository
                 var command = new SqlCommand("select * from Log where id=" + id, conn);
                 conn.Open();
                 var reader = command.ExecuteReader();
-                var userRepository = new UserRepository();
-                var unitRepository = new UnitRepository();
+                var userRepository = new UserRepository(connectionString);
+                var unitRepository = new UnitRepository(connectionString);
                 reader.Read();
                 var user = userRepository.getById(int.Parse(reader.GetValue(1).ToString()));
                 var unit = unitRepository.getById(int.Parse(reader.GetValue(2).ToString()));

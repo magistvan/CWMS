@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Diagnostics;
 using Microsoft.Office.Interop.Word;
-using Microsoft.Office.Core;
 using Project.Domain;
 using Project.Controllers;
 
@@ -84,9 +83,7 @@ namespace Project.Utils
             }
             doc.Close();
             word.Quit();
-
             Domain.Document document = new Domain.Document(0, 0, 0, 0, 0, author, creationDate, modificationDate, result, keywords, fileName, null, DOCUMENT_TYPE.WORD);
-
             createDoc(document);
             return document;
         }

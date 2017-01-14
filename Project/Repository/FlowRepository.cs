@@ -11,9 +11,9 @@ namespace Project.Repository
     {
         private String connectionString;
 
-        public FlowRepository()
+        public FlowRepository(string connectionString)
         {
-            this.connectionString = Properties.Settings.Default.databaseConnectionString;
+            this.connectionString = connectionString;
         }
 
         public List<Flow> getAll()
@@ -26,9 +26,9 @@ namespace Project.Repository
                 conn.Open();
                 var reader = command.ExecuteReader();
                 var elements = new List<Flow>();
-                var userRepository = new UserRepository();
-                var userFlowRepository = new UserFlowRepository();
-                var flowDocumentRepository = new FlowDocumentRepository();
+                var userRepository = new UserRepository(connectionString);
+                var userFlowRepository = new UserFlowRepository(connectionString);
+                var flowDocumentRepository = new FlowDocumentRepository(connectionString);
                 while (reader.Read())
                 {
                     int id = int.Parse(reader.GetValue(0).ToString());
@@ -155,9 +155,9 @@ namespace Project.Repository
                 var command = new SqlCommand("select * from Flow where id=" + id.ToString(), conn);
                 conn.Open();
                 var reader = command.ExecuteReader();
-                var userRepository = new UserRepository();
-                var userFlowRepository = new UserFlowRepository();
-                var flowDocumentRepository = new FlowDocumentRepository();
+                var userRepository = new UserRepository(connectionString);
+                var userFlowRepository = new UserFlowRepository(connectionString);
+                var flowDocumentRepository = new FlowDocumentRepository(connectionString);
                 reader.Read();
                 var creator = userRepository.getById(int.Parse(reader.GetValue(1).ToString()));
                 var revisors = userFlowRepository.getUserIdsByFlowId(id);

@@ -1,11 +1,7 @@
 ﻿using Project.Domain;
 using Project.Exceptions;
 using Project.Repository;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Project.Utils
 {
@@ -26,7 +22,6 @@ namespace Project.Utils
             permissionLevels.Add(ACTION_TYPE.DELETE_FLOW, 3);
             permissionLevels.Add(ACTION_TYPE.VIEW_DOCUMENT, 3);
             permissionLevels.Add(ACTION_TYPE.VIEW_STATISTICS, 2);
-
             flowRepo = new FlowRepository();
             documentRepo = new DocumentRepository();
         }
@@ -43,7 +38,6 @@ namespace Project.Utils
             {
                 throw new UtilException("Wrong action type given");
             }
-
             return HasAccess(user, action);
         }
 
@@ -62,7 +56,6 @@ namespace Project.Utils
             {
                 throw new UtilException("Wrong action type given");
             }
-
             List<Flow> flows = flowRepo.getAll();
             foreach (Flow flow in flows)
             {
@@ -76,7 +69,6 @@ namespace Project.Utils
                     }
                 }
             }
-
             if (document.Author.Equals(user))
             {
                 return true;
@@ -103,7 +95,6 @@ namespace Project.Utils
                     return HasAccess(user, ACTION_TYPE.ADD_REVISION);
                 }
             }
-
             return false;
         }
 
@@ -116,12 +107,10 @@ namespace Project.Utils
         public bool HasDocumentOpenPermission(User user, Document document)
         {
             List<Flow> flows = flowRepo.getAll();
-
             if (document.Author.Equals(user))
             {
                 return true;
             }
-
             foreach (Flow flow in flows)
             {
                 bool containsDocument = false;
@@ -133,14 +122,12 @@ namespace Project.Utils
                         break;
                     }
                 }
-
                 if (containsDocument)
                 {
                     if (flow.Status == FLOW_STATUS.FINISHED)
                     {
                         return true;
                     }
-
                     List<List<int>> revisors = flow.Revisors;
                     foreach (List<int> revisorList in revisors)
                     {
@@ -154,7 +141,6 @@ namespace Project.Utils
                     }
                 }
             }
-
             return HasAccess(user, ACTION_TYPE.VIEW_DOCUMENT);
         }
 
@@ -180,7 +166,6 @@ namespace Project.Utils
             {
                 return true;
             }
-
             return false;
         }
 

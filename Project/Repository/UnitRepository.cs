@@ -12,9 +12,9 @@ namespace Project.Repository
     {
         private String connectionString;
 
-        public UnitRepository()
+        public UnitRepository(string connectionString)
         {
-            this.connectionString = Properties.Settings.Default.databaseConnectionString;
+            this.connectionString = connectionString;
         }
 
         public List<Unit> getAll()
@@ -27,7 +27,7 @@ namespace Project.Repository
                 conn.Open();
                 var reader = command.ExecuteReader();
                 var elements = new List<Unit>();
-                IRepository<User> userRepository = new UserRepository();
+                IRepository<User> userRepository = new UserRepository(connectionString);
                 var users = userRepository.getAll();
                 while (reader.Read())
                 {
@@ -150,7 +150,7 @@ namespace Project.Repository
                 conn.Open();
                 var reader = command.ExecuteReader();
                 reader.Read();
-                IRepository<User> userRepository = new UserRepository();
+                IRepository<User> userRepository = new UserRepository(connectionString);
                 var users = userRepository.getAll();
                 var current_users = users.Where(user => user.Unitid == id).ToList();
                 return new Unit(id, reader.GetValue(1).ToString(), current_users);

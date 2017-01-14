@@ -11,9 +11,9 @@ namespace Project.Repository
     {
         private String connectionString;
 
-        public DocumentRepository()
+        public DocumentRepository(string connectionString)
         {
-            connectionString = Properties.Settings.Default.databaseConnectionString;
+            this.connectionString = connectionString;
         }
 
         public List<Document> getAll()
@@ -26,8 +26,8 @@ namespace Project.Repository
                 conn.Open();
                 var reader = command.ExecuteReader();
                 var elements = new List<Document>();
-                var userRepository = new UserRepository();
-                var flowDocumentRepository = new FlowDocumentRepository();
+                var userRepository = new UserRepository(connectionString);
+                var flowDocumentRepository = new FlowDocumentRepository(connectionString);
                 while (reader.Read())
                 {
                     int id = int.Parse(reader.GetValue(0).ToString());
@@ -152,8 +152,8 @@ namespace Project.Repository
                 conn.Open();
                 var reader = command.ExecuteReader();
                 reader.Read();
-                var userRepository = new UserRepository();
-                var flowDocumentRepository = new FlowDocumentRepository();
+                var userRepository = new UserRepository(connectionString);
+                var flowDocumentRepository = new FlowDocumentRepository(connectionString);
                 var user = userRepository.getById(int.Parse(reader.GetValue(5).ToString()));
                 var flows = flowDocumentRepository.getFlowIdsByDocumentId(id);
                 var element = new Document(id, (DOCUMENT_STATUS)int.Parse(reader.GetValue(1).ToString()), int.Parse(reader.GetValue(2).ToString()), int.Parse(reader.GetValue(3).ToString()), int.Parse(reader.GetValue(4).ToString()), user, DateTime.Parse(reader.GetValue(6).ToString()), DateTime.Parse(reader.GetValue(7).ToString()), reader.GetValue(8).ToString(), reader.GetValue(9).ToString(), reader.GetValue(10).ToString(), flows, (DOCUMENT_TYPE)int.Parse(reader.GetValue(11).ToString()));

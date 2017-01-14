@@ -11,9 +11,9 @@ namespace Project.Repository
     {
         private String connectionString;
 
-        public FlowDocumentRepository()
+        public FlowDocumentRepository(string connectionString)
         {
-            this.connectionString = Properties.Settings.Default.databaseConnectionString;
+            this.connectionString = connectionString;
         }
 
         public void add(Flow flow, Document document)

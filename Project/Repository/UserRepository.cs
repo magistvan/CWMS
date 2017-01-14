@@ -11,9 +11,9 @@ namespace Project.Repository
     {
         private String connectionString;
 
-        public UserRepository()
+        public UserRepository(string connectionString)
         {
-            this.connectionString = Properties.Settings.Default.databaseConnectionString;
+            this.connectionString = connectionString;
         }
 
         public List<User> getAll()
@@ -26,8 +26,8 @@ namespace Project.Repository
                 conn.Open();
                 var reader = command.ExecuteReader();
                 var elements = new List<User>();
-                var unitRepository = new UnitRepository();
-                var userFlowRepository = new UserFlowRepository();
+                var unitRepository = new UnitRepository(connectionString);
+                var userFlowRepository = new UserFlowRepository(connectionString);
                 while (reader.Read())
                 {
                     var unit = int.Parse(reader.GetValue(4).ToString());
@@ -212,8 +212,8 @@ namespace Project.Repository
                 var command = new SqlCommand("select * from [User] where id=" + id, conn);
                 conn.Open();
                 var reader = command.ExecuteReader();
-                var unitRepository = new UnitRepository();
-                var userFlowRepository = new UserFlowRepository();
+                var unitRepository = new UnitRepository(connectionString);
+                var userFlowRepository = new UserFlowRepository(connectionString);
                 reader.Read();
                 var unit = int.Parse(reader.GetValue(4).ToString());
                 int type = int.Parse(reader.GetValue(5).ToString());

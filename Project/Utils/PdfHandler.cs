@@ -80,9 +80,7 @@ namespace Project.Utils
                 }
             }
             reader.Close();
-
             Domain.Document document = new Domain.Document(0, 0, 0, 0, 0, author, creationDate, modificationDate, result, keywords, fileName, null, DOCUMENT_TYPE.PDF);
-
             createPdf(document);
             return document;
         }

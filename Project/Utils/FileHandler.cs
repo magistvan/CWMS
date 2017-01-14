@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Project.Domain;
 using Project.Exceptions;
 using System.IO;
@@ -35,7 +32,6 @@ namespace Project.Utils
                 case DOCUMENT_TYPE.PDF:
                     return PdfHandler.getPdf(fileName);
             }
-
             throw new UtilException("Invalid document type");
         }
 
@@ -48,7 +44,6 @@ namespace Project.Utils
                 case DOCUMENT_TYPE.PDF:
                     return PdfHandler.CopyDocument(path);
             }
-
             throw new UtilException("Invalid document type");
         }
 
@@ -68,7 +63,6 @@ namespace Project.Utils
                 case DOCUMENT_TYPE.PDF:
                     return PdfHandler.getSignatures(fileName);
             }
-
             throw new UtilException("Invalid document type");
         }
 
@@ -86,7 +80,6 @@ namespace Project.Utils
                 case DOCUMENT_TYPE.PDF:
                     return PdfHandler.modifyPdf(document);
             }
-
             throw new UtilException("Invalid document type");
         }
     }

@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Project.Domain;
 using Project.Repository;
 using Project.Exceptions;
 using Project.Utils;
 using System.Net.Mail;
+using System.Data;
+using System.Data.SqlClient;
 
 namespace Project.Controllers
 {
@@ -18,14 +18,21 @@ namespace Project.Controllers
         private UserRepository userRepository;
         private FlowRepository flowRepository;
         private LogRepository logRepository;
+        private SignatureRepository signatureRepository;
+        private UnitRepository unitRepository;
+        private int port = 587;
+        private string username = "newstudentse@gmail.com";
+        private string password = "fainbuzi123";
+        private string smtpServer = "smtp.gmail.com";
 
-        public Controller(User user)
+        public Controller(User user, string connectionString)
         {
-            documentRepository = new DocumentRepository();
-            userRepository = new UserRepository();
-            flowRepository = new FlowRepository();
-            logRepository = new LogRepository();
-
+            documentRepository = new DocumentRepository(connectionString);
+            userRepository = new UserRepository(connectionString);
+            flowRepository = new FlowRepository(connectionString);
+            logRepository = new LogRepository(connectionString);
+            signatureRepository = new SignatureRepository(connectionString);
+            unitRepository = new UnitRepository(connectionString);
             this.user = user;
         }
 
@@ -141,7 +148,6 @@ namespace Project.Controllers
             {
                 User user = userRepository.getById(revisorId);
                 Flow flow;
-
                 foreach (int flowId in user.Flows)
                 {
                     flow = flowRepository.getById(flowId);
@@ -155,10 +161,9 @@ namespace Project.Controllers
             {
                 throw new ControllerException(ex.Message);
             }
-
             if (documents.Count == 0)
             {
-                return null;
+                return documents;
             }
             return documents.Distinct().ToList();
         }
@@ -332,12 +337,28 @@ namespace Project.Controllers
                 throw new ControllerException(ex.Message);
             }
         }
-
-        //Other
-        //TODO
+        
         public void SendEmails(Flow flow)
         {
-            
+            foreach (var id in flow.Revisors[flow.Step])
+            {
+                var user = userRepository.getById(id);
+                MailMessage mail = new MailMessage(username, user.Email, "CWMS", "Now is your turn to revise the documents in flow: id="+flow.Id+".\nAutomatic email. Do not answer!");
+                SmtpClient client = new SmtpClient(smtpServer);
+                client.Port = port;
+                client.UseDefaultCredentials = false;
+                client.Credentials = new System.Net.NetworkCredential(username, password);
+                client.EnableSsl = true;
+                client.DeliveryMethod = SmtpDeliveryMethod.Network;
+                try
+                {
+                    client.Send(mail);
+                }
+                catch (SmtpException ex)
+                {
+                    throw new ControllerException(ex.Message);
+                }
+            }
         }
 
         private void RevertFlows(Document document)
@@ -367,7 +388,8 @@ namespace Project.Controllers
                 {
                     document.Status = DOCUMENT_STATUS.FINAL;
                     documentRepository.update(document);
-                } else
+                }
+                else
                 {
                     throw new ControllerException("Status cannot be set to final");
                 }
@@ -423,13 +445,14 @@ namespace Project.Controllers
             foreach (int documentId in flow.Documents)
             {
                 Document document = documentRepository.getById(documentId);
+                List<Signature> signatures = signatureRepository.getSignaturesOfDocument(documentId);
                 List<Tuple<User, String>> revisedBy = FileHandler.GetSignatures(document.FileName, document.DocumentType);
                 foreach (int revisorId in currentRevisors)
                 {
                     bool signed = false;
-                    foreach (Tuple<User, String> tuple in revisedBy)
+                    foreach (var signature in signatures)
                     {
-                        if (tuple.Item1.Id == revisorId)
+                        if (signature.Userid == revisorId)
                         {
                             signed = true;
                             break;
@@ -466,9 +489,100 @@ namespace Project.Controllers
         private void LogAction(ACTION_TYPE action)
         {
             int id = logRepository.GetMaxId() + 1;
-            var unit = new UnitRepository().getById(user.Unitid);
+            var unit = unitRepository.getById(user.Unitid);
             Log log = new Log(id, user, unit, DateTime.Now, action);
             logRepository.add(log);
+        }
+
+        public static void synchronize(string onlineString)
+        {
+            try
+            {
+                string offlineString = Properties.Settings.Default.databaseConnectionString;
+                var offlineDocumentRepository = new DocumentRepository(offlineString);
+                var offlineFlowDocumentRepository = new FlowDocumentRepository(offlineString);
+                var offlineFlowRepository = new FlowRepository(offlineString);
+                var offlineLogRepository = new LogRepository(offlineString);
+                var offlineSignatureRepository = new SignatureRepository(offlineString);
+                var offlineUnitRepository = new UnitRepository(offlineString);
+                var offlineUserFlowRepository = new UserFlowRepository(offlineString);
+                var offlineUserRepository = new UserRepository(offlineString);
+                var onlineDocumentRepository = new DocumentRepository(onlineString);
+                var onlineFlowDocumentRepository = new FlowDocumentRepository(onlineString);
+                var onlineFlowRepository = new FlowRepository(onlineString);
+                var onlineLogRepository = new LogRepository(onlineString);
+                var onlineSignatureRepository = new SignatureRepository(onlineString);
+                var onlineUnitRepository = new UnitRepository(onlineString);
+                var onlineUserFlowRepository = new UserFlowRepository(onlineString);
+                var onlineUserRepository = new UserRepository(onlineString);
+                var conn = new SqlConnection(offlineString);
+                conn.Open();
+                var command = new SqlCommand("delete Document", conn);
+                command.ExecuteReader();
+                command = new SqlCommand("delete FlowDocument", conn);
+                command.ExecuteReader();
+                command = new SqlCommand("delete Flow", conn);
+                command.ExecuteReader();
+                command = new SqlCommand("delete Log", conn);
+                command.ExecuteReader();
+                command = new SqlCommand("delete Signature", conn);
+                command.ExecuteReader();
+                command = new SqlCommand("delete Unit", conn);
+                command.ExecuteReader();
+                command = new SqlCommand("delete UserFlow", conn);
+                command.ExecuteReader();
+                command = new SqlCommand("delete Unit", conn);
+                command.ExecuteReader();
+                conn.Close();
+                foreach (var element in onlineUnitRepository.getAll())
+                {
+                    offlineUnitRepository.add(element);
+                }
+                foreach (var element in onlineUserRepository.getAll())
+                {
+                    offlineUserRepository.add(element);
+                }
+                foreach (var element in onlineDocumentRepository.getAll())
+                {
+                    offlineDocumentRepository.add(element);
+                    FileHandler.CreateDocument(element);
+                }
+                foreach (var element in onlineFlowRepository.getAll())
+                {
+                    offlineFlowRepository.add(element);
+                }
+                foreach (var element in onlineLogRepository.getAll())
+                {
+                    offlineLogRepository.add(element);
+                }
+                foreach (var element in onlineSignatureRepository.getAll())
+                {
+                    offlineSignatureRepository.add(element);
+                }
+                foreach (var element in onlineDocumentRepository.getAll())
+                {
+                    foreach (var el in onlineFlowDocumentRepository.getFlowIdsByDocumentId(element.Id))
+                    {
+                        var flow = new Flow(el, null, null, null, 0, 0, DateTime.Now, DateTime.Now);
+                        offlineFlowDocumentRepository.add(flow, element);
+                    }
+                }
+                foreach (var element in onlineFlowRepository.getAll())
+                {
+                    foreach (var el in onlineUserFlowRepository.getUserIdsByFlowId(element.Id))
+                    {
+                        for (int i = 0; i < el.Count; ++i)
+                        {
+                            var user = new Admin(el[i], "", "", "", 0, null);
+                            offlineUserFlowRepository.add(user, element, i);
+                        }
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                throw new ControllerException("Error in synchronizing online and offline database!");
+            }
         }
     }
 }

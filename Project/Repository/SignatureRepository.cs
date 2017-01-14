@@ -11,9 +11,9 @@ namespace Project.Repository
     {
         private String connectionString;
 
-        public SignatureRepository()
+        public SignatureRepository(string connectionString)
         {
-            this.connectionString = Properties.Settings.Default.databaseConnectionString;
+            this.connectionString = connectionString;
         }
 
         public List<Signature> getAll()
