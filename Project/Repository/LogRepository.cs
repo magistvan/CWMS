@@ -180,6 +180,10 @@ namespace Project.Repository
                 conn.Open();
                 var reader = command.ExecuteReader();
                 reader.Read();
+                if (reader.GetValue(0).ToString() == "")
+                {
+                    return 0;
+                }
                 return int.Parse(reader.GetValue(0).ToString());
             }
             catch (Exception)

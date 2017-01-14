@@ -30,17 +30,16 @@ namespace Project.Controllers
         }
 
         //Add Methods
-        public void AddDocumentFromString(DOCUMENT_STATUS status,string abstract_string, string keywords, string fileName, List<int> flows, DOCUMENT_TYPE documentType)
+        public void AddDocumentFromString(DOCUMENT_STATUS status,string abstract_string, string keywords, string fileName, DOCUMENT_TYPE documentType)
         {
             try
             {
                 int id = documentRepository.GetMaxId() + 1;
                 int draftVersion = 1, finalVersion = 1, revisionVersion = 0;
                 DateTime now = DateTime.Now;
-                Document document = new Document(id, status, draftVersion, finalVersion, revisionVersion, user, now, now, abstract_string, keywords, fileName, flows, documentType);
+                Document document = new Document(id, status, draftVersion, finalVersion, revisionVersion, user, now, now, abstract_string, keywords, fileName, new List<int>(), documentType);
                 documentRepository.add(document);
                 FileHandler.CreateDocument(document);
-
                 LogAction(ACTION_TYPE.CREATE_DOCUMENT);
             }
             catch (RepositoryException ex)
@@ -65,12 +64,12 @@ namespace Project.Controllers
             }
         }
 
-        public void AddFlow(List<int> documents, User creator, List<List<int>> revisors, int step, DateTime creationDate)
+        public void AddFlow(List<int> documents, List<List<int>> revisors, int step, DateTime creationDate)
         {
             try
             {
                 int id = flowRepository.GetMaxId() + 1;
-                Flow flow = new Flow(id, documents, creator, revisors, step, FLOW_STATUS.IN_PROGRESS, creationDate, DateTime.MinValue);
+                Flow flow = new Flow(id, documents, user, revisors, step, FLOW_STATUS.IN_PROGRESS, creationDate, DateTime.Parse(Properties.Settings.Default.defaultDate));
                 flowRepository.add(flow);
                 LogAction(ACTION_TYPE.CREATE_FLOW);
             }
@@ -80,10 +79,12 @@ namespace Project.Controllers
             }
         }
 
-        public void AddRevision(Flow flow, Document document)
+        public void AddRevision(int flow_id, int document_id)
         {
             try
             {
+                var document = documentRepository.getById(document_id);
+                var flow = flowRepository.getById(flow_id);
                 FileHandler.ReviseDocument(document);
                 TryToAdvanceFlow(flow);
                 LogAction(ACTION_TYPE.ADD_REVISION);
@@ -94,14 +95,24 @@ namespace Project.Controllers
             }
         }
 
-
-
         //Get Methods
         public Document getDocumentById(int id)
         {
             try
             {
                 return documentRepository.getById(id);
+            }
+            catch (RepositoryException ex)
+            {
+                throw new ControllerException(ex.Message);
+            }
+        }
+
+        public Flow getFlowById(int id)
+        {
+            try
+            {
+                return flowRepository.getById(id);
             }
             catch (RepositoryException ex)
             {
@@ -126,7 +137,6 @@ namespace Project.Controllers
         public List<Document> GetDocumentsByRevisor(int revisorId)
         {
             List<Document> documents = new List<Document>();
-
             try
             {
                 User user = userRepository.getById(revisorId);
@@ -150,14 +160,12 @@ namespace Project.Controllers
             {
                 return null;
             }
-
             return documents.Distinct().ToList();
         }
 
         public List<Document> GetAllDocuments()
         {
             List<Document> documents = null;
-
             try
             {
                 documents = documentRepository.getAll();
@@ -166,7 +174,6 @@ namespace Project.Controllers
             {
                 throw new ControllerException(ex.Message);
             }
-
             return documents;
         }
 
@@ -175,7 +182,6 @@ namespace Project.Controllers
         public int GetNumberOfActiveFlows()
         {
             List<Flow> flows = null;
-
             try
             {
                 flows = flowRepository.getAll();
@@ -185,7 +191,6 @@ namespace Project.Controllers
             {
                 throw new ControllerException(ex.Message);
             }
-
             return flows.Where(flow => flow.Status == FLOW_STATUS.IN_PROGRESS).Count();
         }
 
@@ -193,7 +198,6 @@ namespace Project.Controllers
         {
             List<Flow> flows = null;
             double average = 0;
-
             try
             {
                 flows = flowRepository.getAll();
@@ -202,7 +206,6 @@ namespace Project.Controllers
             {
                 throw new ControllerException(ex.Message);
             }
-
             foreach (Flow flow in flows)
             {
                 foreach (List<int> revisors in flow.Revisors)
@@ -210,9 +213,7 @@ namespace Project.Controllers
                     average += revisors.Count;
                 }
             }
-
             LogAction(ACTION_TYPE.VIEW_STATISTICS);
-
             return average / flows.Count;
         }
 
@@ -220,7 +221,6 @@ namespace Project.Controllers
         {
             List<User> users = null;
             double average = 0;
-
             try
             {
                 users = userRepository.getAll();
@@ -229,9 +229,7 @@ namespace Project.Controllers
             {
                 throw new ControllerException(ex.Message);
             }
-
             List<Document> documents = null;
-
             try
             {
                 documents = documentRepository.getAll();
@@ -240,7 +238,6 @@ namespace Project.Controllers
             {
                 throw new ControllerException(ex.Message);
             }
-
             foreach (User user in users)
             {
                 foreach (Document document in documents)
@@ -251,16 +248,13 @@ namespace Project.Controllers
                     }
                 }
             }
-
             LogAction(ACTION_TYPE.VIEW_STATISTICS);
-
             return average / users.Count;
         }
 
         public int GetNumberOfPeople()
         {
             List<User> users = null;
-
             try
             {
                 users = userRepository.getAll();
@@ -269,9 +263,7 @@ namespace Project.Controllers
             {
                 throw new ControllerException(ex.Message);
             }
-
             LogAction(ACTION_TYPE.VIEW_STATISTICS);
-
             return users.Count;
         }
         
@@ -279,7 +271,6 @@ namespace Project.Controllers
         {
             List<Flow> flows = flowRepository.getAll();
             double sum = 0, nr = 0;
-
             foreach (Flow flow in flows)
             {
                 if (flow.Status == FLOW_STATUS.FINISHED)
@@ -288,9 +279,7 @@ namespace Project.Controllers
                     ++nr;
                 }
             }
-
             LogAction(ACTION_TYPE.VIEW_STATISTICS);
-
             return sum / nr;
         }
 
@@ -321,7 +310,6 @@ namespace Project.Controllers
                     RevertFlows(document);
                 }
                 document.ModificationDate = DateTime.Now;
-
                 LogAction(ACTION_TYPE.MODIFY_DOCUMENT);
                 documentRepository.update(document);
             }
@@ -355,7 +343,6 @@ namespace Project.Controllers
         private void RevertFlows(Document document)
         {
             List<Flow> flows = flowRepository.getAll();
-
             foreach (Flow flow in flows)
             {
                 foreach (int documentId in flow.Documents)
@@ -432,7 +419,6 @@ namespace Project.Controllers
         {
             List<int> currentRevisors = flow.Revisors[flow.Step];
             bool finished = true;
-
             //Check if every document has been signed by every member of this step
             foreach (int documentId in flow.Documents)
             {
@@ -460,7 +446,6 @@ namespace Project.Controllers
                     break;
                 }
             }
-
             //Step is done, advance to the next
             if (finished)
             {

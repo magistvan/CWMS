@@ -24,6 +24,7 @@ namespace Project.Utils
             {
                 var par = doc.Content.Paragraphs.Add();
                 par.Range.Text = lines[i];
+                par.Range.InsertParagraphAfter();
             }
             string path = Path.Combine(Environment.CurrentDirectory, document.FileName);
             doc.SaveAs(path);
