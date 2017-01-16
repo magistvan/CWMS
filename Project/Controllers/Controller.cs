@@ -20,6 +20,7 @@ namespace Project.Controllers
         private LogRepository logRepository;
         private SignatureRepository signatureRepository;
         private UnitRepository unitRepository;
+        private FileHandler fileHandler;
         private int port = 587;
         private string username = "newstudentse@gmail.com";
         private string password = "fainbuzi123";
@@ -33,6 +34,7 @@ namespace Project.Controllers
             logRepository = new LogRepository(connectionString);
             signatureRepository = new SignatureRepository(connectionString);
             unitRepository = new UnitRepository(connectionString);
+            fileHandler = new FileHandler(connectionString);
             this.user = user;
         }
 
@@ -46,7 +48,7 @@ namespace Project.Controllers
                 DateTime now = DateTime.Now;
                 Document document = new Document(id, status, draftVersion, finalVersion, revisionVersion, user, now, now, abstract_string, keywords, fileName, new List<int>(), documentType);
                 documentRepository.add(document);
-                FileHandler.CreateDocument(document);
+                fileHandler.CreateDocument(document);
                 LogAction(ACTION_TYPE.CREATE_DOCUMENT);
             }
             catch (RepositoryException ex)
@@ -59,7 +61,7 @@ namespace Project.Controllers
         {
             try
             {
-                Document document = FileHandler.CopyDocument(path, type);
+                Document document = fileHandler.CopyDocument(path, type);
                 int id = documentRepository.GetMaxId() + 1;
                 document.Id = id;
                 documentRepository.add(document);
@@ -92,7 +94,7 @@ namespace Project.Controllers
             {
                 var document = documentRepository.getById(document_id);
                 var flow = flowRepository.getById(flow_id);
-                FileHandler.ReviseDocument(document);
+                fileHandler.ReviseDocument(document);
                 TryToAdvanceFlow(flow);
                 LogAction(ACTION_TYPE.ADD_REVISION);
             }
@@ -180,6 +182,20 @@ namespace Project.Controllers
                 throw new ControllerException(ex.Message);
             }
             return documents;
+        }
+
+        public List<Flow> GetAllFlows()
+        {
+            List<Flow> flows = null;
+            try
+            {
+                flows = flowRepository.getAll();
+            }
+            catch (RepositoryException ex)
+            {
+                throw new ControllerException(ex.Message);
+            }
+            return flows;
         }
 
 
@@ -446,7 +462,7 @@ namespace Project.Controllers
             {
                 Document document = documentRepository.getById(documentId);
                 List<Signature> signatures = signatureRepository.getSignaturesOfDocument(documentId);
-                List<Tuple<User, String>> revisedBy = FileHandler.GetSignatures(document.FileName, document.DocumentType);
+                List<Tuple<User, String>> revisedBy = fileHandler.GetSignatures(document.FileName, document.DocumentType);
                 foreach (int revisorId in currentRevisors)
                 {
                     bool signed = false;
@@ -494,7 +510,7 @@ namespace Project.Controllers
             logRepository.add(log);
         }
 
-        public static void synchronize(string onlineString)
+        public void synchronize(string onlineString)
         {
             try
             {
@@ -545,7 +561,7 @@ namespace Project.Controllers
                 foreach (var element in onlineDocumentRepository.getAll())
                 {
                     offlineDocumentRepository.add(element);
-                    FileHandler.CreateDocument(element);
+                    fileHandler.CreateDocument(element);
                 }
                 foreach (var element in onlineFlowRepository.getAll())
                 {

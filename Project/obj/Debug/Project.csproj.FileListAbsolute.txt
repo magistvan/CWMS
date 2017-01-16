@@ -8,3 +8,46 @@ D:\Egyetem\Collective project\Project\Project\bin\Debug\Project.pdb
 D:\Egyetem\Collective project\Project\Project\obj\Debug\Project.exe
 D:\Egyetem\Collective project\Project\Project\obj\Debug\Project.pdb
 D:\Egyetem\Collective project\Project\Project\obj\Debug\Project.csproj.ResolveComReference.cache
+E:\Egyetem\Kommunista project\CWMS\Project\bin\Debug\Project.exe.config
+E:\Egyetem\Kommunista project\CWMS\Project\obj\Debug\Project.csproj.ResolveComReference.cache
+E:\Egyetem\Kommunista project\CWMS\Project\obj\Debug\Project.exe
+E:\Egyetem\Kommunista project\CWMS\Project\obj\Debug\Project.pdb
+E:\Egyetem\Kommunista project\CWMS\Project\obj\Debug\Project.csprojResolveAssemblyReference.cache
+E:\Egyetem\Kommunista project\CWMS\Project\obj\Debug\Project.Form1.resources
+E:\Egyetem\Kommunista project\CWMS\Project\obj\Debug\Project.Properties.Resources.resources
+E:\Egyetem\Kommunista project\CWMS\Project\obj\Debug\Project.csproj.GenerateResource.Cache
+E:\Egyetem\Kommunista project\CWMS\Project\bin\Debug\Project.exe
+E:\Egyetem\Kommunista project\CWMS\Project\bin\Debug\Project.pdb
+E:\Egyetem\Kommunista project\CWMS\Project\obj\Debug\Project.Ui.LoginForm.resources
+E:\Egyetem\Kommunista project\CWMS\Project\obj\Debug\Project.Ui.WorkFlowForm.resources
+E:\CWMS\Project\obj\Debug\Project.csprojResolveAssemblyReference.cache
+E:\CWMS\Project\obj\Debug\Project.exe
+E:\CWMS\Project\obj\Debug\Project.pdb
+E:\CWMS\Project\obj\Debug\Project.csproj.ResolveComReference.cache
+E:\CWMS\Project\obj\Debug\Project.Form1.resources
+E:\CWMS\Project\obj\Debug\Project.Properties.Resources.resources
+E:\CWMS\Project\obj\Debug\Project.Ui.LoginForm.resources
+E:\CWMS\Project\obj\Debug\Project.Ui.WorkFlowForm.resources
+E:\CWMS\Project\obj\Debug\Project.csproj.GenerateResource.Cache
+E:\CWMS\Project\bin\Debug\Project.exe.config
+E:\CWMS\Project\bin\Debug\Project.exe
+E:\CWMS\Project\bin\Debug\Project.pdb
+E:\CWMS\Project\bin\Debug\NetOffice.dll
+E:\CWMS\Project\bin\Debug\OfficeApi.dll
+E:\CWMS\Project\bin\Debug\VBIDEApi.dll
+E:\CWMS\Project\bin\Debug\stdole.dll
+E:\CWMS\Project\bin\Debug\NetOffice.xml
+E:\CWMS\Project\bin\Debug\OfficeApi.xml
+E:\CWMS\Project\bin\Debug\VBIDEApi.xml
+C:\Users\Bala\Desktop\CWMS\Project\bin\Debug\Project.exe.config
+C:\Users\Bala\Desktop\CWMS\Project\bin\Debug\Project.exe
+C:\Users\Bala\Desktop\CWMS\Project\bin\Debug\Project.pdb
+C:\Users\Bala\Desktop\CWMS\Project\obj\Debug\Project.csprojResolveAssemblyReference.cache
+C:\Users\Bala\Desktop\CWMS\Project\obj\Debug\Project.csproj.ResolveComReference.cache
+C:\Users\Bala\Desktop\CWMS\Project\obj\Debug\Project.Properties.Resources.resources
+C:\Users\Bala\Desktop\CWMS\Project\obj\Debug\Project.Ui.LoginForm.resources
+C:\Users\Bala\Desktop\CWMS\Project\obj\Debug\Project.Ui.WorkFlowForm.resources
+C:\Users\Bala\Desktop\CWMS\Project\obj\Debug\Project.csproj.GenerateResource.Cache
+C:\Users\Bala\Desktop\CWMS\Project\obj\Debug\Project.exe
+C:\Users\Bala\Desktop\CWMS\Project\obj\Debug\Project.pdb
+C:\Users\Bala\Desktop\CWMS\Project\obj\Debug\Project.Ui.DocumentForm.resources

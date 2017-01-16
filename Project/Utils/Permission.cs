@@ -22,8 +22,8 @@ namespace Project.Utils
             permissionLevels.Add(ACTION_TYPE.DELETE_FLOW, 3);
             permissionLevels.Add(ACTION_TYPE.VIEW_DOCUMENT, 3);
             permissionLevels.Add(ACTION_TYPE.VIEW_STATISTICS, 2);
-            flowRepo = new FlowRepository();
-            documentRepo = new DocumentRepository();
+            flowRepo = new FlowRepository("Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=\"E:\\Egyetem\\Kommunista project\\CWMS\\Project\\db.mdf\";Integrated Security=True");
+            documentRepo = new DocumentRepository("Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=\"E:\\Egyetem\\Kommunista project\\CWMS\\Project\\db.mdf\";Integrated Security=True");
         }
         
         /// <summary>

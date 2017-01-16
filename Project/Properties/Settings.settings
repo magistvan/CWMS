@@ -10,7 +10,7 @@
       <Value Profile="(Default)">Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename="D:\Egyetem\Collective project\Project\Project\db.mdf";Integrated Security=True</Value>
     </Setting>
     <Setting Name="dateFormat" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">yyyy-MM-dd HH:MM:ss</Value>
+      <Value Profile="(Default)">yyyy-MM-dd HH:mm:ss</Value>
     </Setting>
     <Setting Name="defaultDate" Type="System.String" Scope="Application">
       <Value Profile="(Default)">1900.01.01. 0:00:00</Value>

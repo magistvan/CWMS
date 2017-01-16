@@ -36,7 +36,7 @@ namespace Project.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("yyyy-MM-dd HH:MM:ss")]
+        [global::System.Configuration.DefaultSettingValueAttribute("yyyy-MM-dd HH:mm:ss")]
         public string dateFormat {
             get {
                 return ((string)(this["dateFormat"]));

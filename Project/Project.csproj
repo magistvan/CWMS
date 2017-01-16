@@ -88,12 +88,6 @@
     <Compile Include="Exceptions\ControllerException.cs" />
     <Compile Include="Exceptions\RepositoryException.cs" />
     <Compile Include="Exceptions\UtilException.cs" />
-    <Compile Include="Form1.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
-    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repository\DocumentRepository.cs" />
@@ -105,13 +99,28 @@
     <Compile Include="Repository\UnitRepository.cs" />
     <Compile Include="Repository\UserFlowRepository.cs" />
     <Compile Include="Repository\UserRepository.cs" />
+    <Compile Include="Ui\DocumentForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Ui\DocumentForm.Designer.cs">
+      <DependentUpon>DocumentForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Ui\LoginForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Ui\LoginForm.Designer.cs">
+      <DependentUpon>LoginForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Ui\WorkFlowForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Ui\WorkFlowForm.Designer.cs">
+      <DependentUpon>WorkFlowForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Utils\FileHandler.cs" />
     <Compile Include="Utils\PdfHandler.cs" />
     <Compile Include="Utils\Permission.cs" />
     <Compile Include="Utils\WordHandler.cs" />
-    <EmbeddedResource Include="Form1.resx">
-      <DependentUpon>Form1.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -121,6 +130,15 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="Ui\DocumentForm.resx">
+      <DependentUpon>DocumentForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Ui\LoginForm.resx">
+      <DependentUpon>LoginForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Ui\WorkFlowForm.resx">
+      <DependentUpon>WorkFlowForm.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -156,7 +174,7 @@
     <COMReference Include="Microsoft.Office.Core">
       <Guid>{2DF8D04C-5BFA-101B-BDE5-00AA0044DE52}</Guid>
       <VersionMajor>2</VersionMajor>
-      <VersionMinor>4</VersionMinor>
+      <VersionMinor>5</VersionMinor>
       <Lcid>0</Lcid>
       <WrapperTool>primary</WrapperTool>
       <Isolated>False</Isolated>
@@ -189,6 +207,9 @@
       <Isolated>False</Isolated>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -6,43 +6,50 @@ using System.IO;
 
 namespace Project.Utils
 {
-    static class FileHandler
+    class FileHandler
     {
-        public static void CreateDocument(Domain.Document document)
+        WordHandler wordHandler;
+        PdfHandler pdfHandler;
+        public FileHandler(string connectionString)
+        {
+            wordHandler = new WordHandler(connectionString);
+            pdfHandler = new PdfHandler(connectionString);
+        }
+        public void CreateDocument(Domain.Document document)
         {
             switch (document.DocumentType)
             {
                 case DOCUMENT_TYPE.WORD:
-                    WordHandler.createDoc(document);
+                    wordHandler.createDoc(document);
                     break;
                 case DOCUMENT_TYPE.PDF:
-                    PdfHandler.createPdf(document);
+                    pdfHandler.createPdf(document);
                     break;
                 default:
                     throw new UtilException("Invalid document type");
             }
         }
 
-        public static Domain.Document GetDocument(string fileName, DOCUMENT_TYPE type)
+        public Domain.Document GetDocument(string fileName, DOCUMENT_TYPE type)
         {
             switch (type)
             {
                 case DOCUMENT_TYPE.WORD:
-                    return WordHandler.getDoc(fileName);
+                    return wordHandler.getDoc(fileName);
                 case DOCUMENT_TYPE.PDF:
-                    return PdfHandler.getPdf(fileName);
+                    return pdfHandler.getPdf(fileName);
             }
             throw new UtilException("Invalid document type");
         }
 
-        public static Domain.Document CopyDocument(String path, DOCUMENT_TYPE type)
+        public Domain.Document CopyDocument(String path, DOCUMENT_TYPE type)
         {
             switch (type)
             {
                 case DOCUMENT_TYPE.WORD:
-                    return WordHandler.CopyDocument(path);
+                    return wordHandler.CopyDocument(path);
                 case DOCUMENT_TYPE.PDF:
-                    return PdfHandler.CopyDocument(path);
+                    return pdfHandler.CopyDocument(path);
             }
             throw new UtilException("Invalid document type");
         }
@@ -54,14 +61,14 @@ namespace Project.Utils
             System.IO.File.Move(oldPath, newPath);
         }
 
-        public static List<Tuple<User, string>> GetSignatures(string fileName, DOCUMENT_TYPE type)
+        public List<Tuple<User, string>> GetSignatures(string fileName, DOCUMENT_TYPE type)
         {
             switch (type)
             {
                 case DOCUMENT_TYPE.WORD:
-                    return WordHandler.getSignatures(fileName);
+                    return wordHandler.getSignatures(fileName);
                 case DOCUMENT_TYPE.PDF:
-                    return PdfHandler.getSignatures(fileName);
+                    return pdfHandler.getSignatures(fileName);
             }
             throw new UtilException("Invalid document type");
         }
@@ -71,14 +78,14 @@ namespace Project.Utils
         /// </summary>
         /// <param name="document"></param>
         /// <returns></returns>
-        public static List<User> ReviseDocument(Domain.Document document)
+        public List<User> ReviseDocument(Domain.Document document)
         {
             switch (document.DocumentType)
             {
                 case DOCUMENT_TYPE.WORD:
-                    return WordHandler.modifyDoc(document);
+                    return wordHandler.modifyDoc(document);
                 case DOCUMENT_TYPE.PDF:
-                    return PdfHandler.modifyPdf(document);
+                    return pdfHandler.modifyPdf(document);
             }
             throw new UtilException("Invalid document type");
         }

@@ -11,9 +11,9 @@ namespace Project.Controllers
     {
         private UserRepository repository;
 
-        public UserController()
+        public UserController(string connectionString)
         {
-            repository = new UserRepository();
+            repository = new UserRepository(connectionString);
         }
 
         /// <summary>
@@ -123,5 +123,42 @@ namespace Project.Controllers
                 throw new ControllerException("There is no user with this username!!");
             }
         }
+
+        public User getUserById(int Id)
+        {
+            User user = null;
+            try
+            {
+                user = repository.getById(Id);
+            }
+            catch(RepositoryException ex)
+            {
+                throw new ControllerException(ex.Message);
+            }
+            return user;
+        }
+
+        public int login(string userName, string password)
+        {
+            List<User> users = null;
+            try
+            {
+                users = repository.getAll();
+            }
+            catch (RepositoryException ex)
+            {
+                throw new ControllerException(ex.Message);
+            }
+            try
+            {
+                 return users.Where(user => (user.Username == userName && user.Password == password)).First().Id;
+            }
+            catch (Exception)
+            {
+                throw new ControllerException("Wrong credentials!!");
+            }
+
+        }
+
     }
 }

@@ -11,9 +11,14 @@ using Project.Controllers;
 
 namespace Project.Utils
 {
-    static class PdfHandler
+    class PdfHandler
     {
-        public static void createPdf(Domain.Document document)
+        string connectionString;
+        public PdfHandler(string connectionString)
+        {
+            this.connectionString = connectionString;
+        }
+        public void createPdf(Domain.Document document)
         {
             var fs = new FileStream(document.FileName, FileMode.CreateNew, FileAccess.Write, FileShare.None);
             var doc = new iTextSharp.text.Document();
@@ -29,11 +34,11 @@ namespace Project.Utils
             doc.Close();
         }
 
-        public static Domain.Document getPdf(string fileName)
+        public Domain.Document getPdf(string fileName)
         {
             var reader = new PdfReader(fileName);
             var dict = reader.Info;
-            var author = new UserController().getUserByUsername(dict["Author"]);
+            var author = new UserController(connectionString).getUserByUsername(dict["Author"]);
             var creationDate = PdfDate.Decode(dict["CreationDate"]);
             var modificationDate = PdfDate.Decode(dict["ModDate"]);
             var keywords = dict["Keywords"];
@@ -58,12 +63,12 @@ namespace Project.Utils
         /// </summary>
         /// <param name="path">Path to the file to be copied</param>
         /// <returns>Document object, which should be added later to the database</returns>
-        public static Domain.Document CopyDocument(String path)
+        public Domain.Document CopyDocument(String path)
         {
             var reader = new PdfReader(path);
             String fileName = System.IO.Path.GetFileName(path);
             var dict = reader.Info;
-            var author = new UserController().getUserByUsername(dict["Author"]);
+            var author = new UserController(connectionString).getUserByUsername(dict["Author"]);
             var creationDate = PdfDate.Decode(dict["CreationDate"]);
             var modificationDate = PdfDate.Decode(dict["ModDate"]);
             var keywords = dict["Keywords"];
@@ -85,13 +90,13 @@ namespace Project.Utils
             return document;
         }
 
-        public static List<Tuple<User, string>> getSignatures(string fileName)
+        public List<Tuple<User, string>> getSignatures(string fileName)
         {
             var reader = new PdfReader(fileName);
             var sb = new StringBuilder();
             var af = reader.AcroFields;
             var names = af.GetSignatureNames();
-            var userController = new UserController();
+            var userController = new UserController(connectionString);
             var list = new List<Tuple<User, string>>();
             for (int i = 0; i < names.Count; ++i)
             {
@@ -107,7 +112,7 @@ namespace Project.Utils
         /// </summary>
         /// <param name="document"></param>
         /// <returns></returns>
-        public static List<User> modifyPdf(Domain.Document document)
+        public List<User> modifyPdf(Domain.Document document)
         {
             var signatures1 = getSignatures(document.FileName);
             var path = System.IO.Path.Combine(Environment.CurrentDirectory, document.FileName);

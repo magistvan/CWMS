@@ -21,6 +21,7 @@ namespace Project.Repository
             SqlConnection conn = null;
             try
             {
+
                 conn = new SqlConnection(connectionString);
                 var command = new SqlCommand("select * from [User]", conn);
                 conn.Open();

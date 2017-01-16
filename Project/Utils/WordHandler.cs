@@ -8,9 +8,14 @@ using Project.Controllers;
 
 namespace Project.Utils
 {
-    static class WordHandler
+    class WordHandler
     {
-        public static void createDoc(Domain.Document document)
+        string connectionString;
+        public WordHandler(string connectionString)
+        {
+            this.connectionString = connectionString;
+        }
+        public void createDoc(Domain.Document document)
         {
             var app = new Application();
             app.Visible = false;
@@ -30,14 +35,14 @@ namespace Project.Utils
             app.Quit();
         }
 
-        public static Domain.Document getDoc(string fileName)
+        public Domain.Document getDoc(string fileName)
         {
             var word = new Application();
             word.Visible = false;
             object path = Path.Combine(Environment.CurrentDirectory, fileName);
             var doc = word.Documents.Open(ref path);
             var properties = doc.BuiltInDocumentProperties;
-            var author = new UserController().getUserByUsername(properties["Author"].Value);
+            var author = new UserController(connectionString).getUserByUsername(properties["Author"].Value);
             var creationDate = properties["Creation Date"].Value;
             var modificationDate = properties["Last Save Time"].Value;
             var keywords = properties["Keywords"].Value;
@@ -60,7 +65,7 @@ namespace Project.Utils
         /// </summary>
         /// <param name="path">Path to the file to be copied</param>
         /// <returns>Document object, which should be added later to the database</returns>
-        public static Domain.Document CopyDocument(String path)
+        public Domain.Document CopyDocument(String path)
         {
             var word = new Application();
             word.Visible = false;
@@ -68,7 +73,7 @@ namespace Project.Utils
             String fileName = Path.GetFileName(path);
             var doc = word.Documents.Open(ref fullPath);
             var properties = doc.BuiltInDocumentProperties;
-            var author = new UserController().getUserByUsername(properties["Author"].Value);
+            var author = new UserController(connectionString).getUserByUsername(properties["Author"].Value);
             var creationDate = properties["Creation Date"].Value;
             var modificationDate = properties["Last Save Time"].Value;
             var keywords = properties["Keywords"].Value;
@@ -88,13 +93,13 @@ namespace Project.Utils
             return document;
         }
 
-        public static List<Tuple<User, string>> getSignatures(string fileName)
+        public List<Tuple<User, string>> getSignatures(string fileName)
         {
             var word = new Application();
             word.Visible = false;
             object path = Path.Combine(Environment.CurrentDirectory, fileName);
             var doc = word.Documents.Open(ref path);
-            var userController = new UserController();
+            var userController = new UserController(connectionString);
             var list = new List<Tuple<User, string>>();
             foreach (Microsoft.Office.Core.Signature signature in doc.Signatures)
             {
@@ -110,7 +115,7 @@ namespace Project.Utils
         /// </summary>
         /// <param name="document"></param>
         /// <returns></returns>
-        public static List<User> modifyDoc(Domain.Document document)
+        public List<User> modifyDoc(Domain.Document document)
         {
             var signatures1 = getSignatures(document.FileName);
             var path = Path.Combine(Environment.CurrentDirectory, document.FileName);
